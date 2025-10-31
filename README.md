@@ -1,145 +1,113 @@
-# API_MAPS_B2B
-Este proyecto implementa un pipeline automatizado para la obtención y enriquecimiento de datos de constructoras, inmobiliarias y estudios de arquitectura en Argentina, combinando la API oficial de Google Places con técnicas de data enrichment y procesamiento web.
-# 🏗️ Data Enrichment: Constructoras, Inmobiliarias y Arquitectos
 
-## 📌 Descripción general
+# Google Maps Scraper – Análisis de Mercado y Consultoría de Negocios
 
-Este proyecto implementa un **pipeline automatizado de extracción y enriquecimiento de datos** para el sector de la **construcción, inmobiliarias y estudios de arquitectura** en Argentina.  
+## Descripción del Proyecto
 
-Utiliza la **API oficial de Google Places** para obtener información pública de empresas (nombre, dirección, teléfono y sitio web), y la complementa con técnicas de **email discovery** y **data enrichment** (Hunter.io, Apollo.io, etc.), generando una base estructurada y lista para análisis o marketing B2B responsable.
+Este proyecto es una **herramienta de scraping y análisis de Google Maps** desarrollada en **Python** utilizando **Playwright**.
 
----
+Está diseñado para **consultoría y análisis de mercado**, permitiendo a empresas o analistas extraer información estructurada de negocios por categoría y ubicación, optimizando la toma de decisiones estratégicas.
 
-## ⚙️ Arquitectura del proyecto
+El sistema permite:
 
-┌──────────────────────┐
-│ Google Places API │──► Dirección, teléfono, website
-└──────────────────────┘
-│
-▼
-┌──────────────────────┐
-│ Extracción web │──► Email desde sitio web oficial
-│ (BeautifulSoup) │
-└──────────────────────┘
-│
-▼
-┌──────────────────────┐
-│ Enriquecimiento B2B │──► Emails y datos de contacto
-│ (Hunter, Apollo, etc)│
-└──────────────────────┘
-│
-▼
-┌───────────────────────────┐
-│ Base consolidada en Excel │──► contact_data.xlsx
-└───────────────────────────┘
+* Automatizar búsquedas en Google Maps por **categorías y ubicación**.
+* Extraer información relevante de cada negocio: nombre, categoría (tipo de empresa), dirección, teléfono, sitio web, calificación, descripción breve y link directo en Maps.
+* Guardar los resultados en **Excel** para análisis posterior, reportes o dashboards.
+* Mostrar **los resultados en tiempo real** durante la ejecución, facilitando la revisión inmediata.
 
-yaml
-Copiar código
+Este proyecto puede integrarse como parte de un **servicio de consultoría de mercado** para:
+
+* Identificar competidores en un sector específico.
+* Mapear oportunidades de expansión por ubicación.
+* Analizar calificaciones y reputación de empresas en línea.
 
 ---
 
-## 🧰 Tecnologías utilizadas
+## Tecnologías
 
-| Área | Herramienta / Librería |
-|------|------------------------|
-| Extracción de datos | **Google Places API** |
-| Procesamiento HTTP | `requests` |
-| Parsing HTML | `beautifulsoup4` |
-| Limpieza / Exportación | `pandas`, `openpyxl` |
-| Enriquecimiento opcional | **Hunter.io API**, **Apollo.io API** |
-| Almacenamiento | `Excel (XLSX)` o `CSV` |
+* **Python 3.10+** – lenguaje principal.
+* **Playwright** – automatización del navegador para scraping dinámico.
+* **Pandas** – procesamiento y almacenamiento de datos.
+* **OpenPyXL** – exportación a Excel.
 
 ---
 
-## 🚀 Características principales
+## Instalación
 
-✅ Cumple con los **Términos de Servicio de Google** (usa solo la API oficial).  
-✅ Extrae automáticamente **nombre, dirección, teléfono y sitio web**.  
-✅ Detecta correos electrónicos públicos en los sitios oficiales.  
-✅ Exporta resultados a **Excel** con formato limpio y utilizable.  
-✅ Permite integrar **APIs de enriquecimiento** (Hunter, Apollo, etc.).  
-✅ Configurable por **ciudad, categoría y radio de búsqueda**.  
+1. Instalar Python 3.10+
+2. Instalar librerías necesarias:
 
----
+   ```bash
+   pip install pandas openpyxl playwright
+   ```
+3. Inicializar Playwright para instalar navegadores:
 
-## 🧩 Estructura del repositorio
-
-📂 data_enrichment_construccion/
-├── buscar_contactos_maps.py # Script principal (Google Places + email scraping)
-├── enrich_hunter_api.py # (opcional) Integración con Hunter.io
-├── requirements.txt # Dependencias del proyecto
-├── sample_output.xlsx # Ejemplo de salida generada
-└── README.md # Documentación del proyecto
-
-yaml
-Copiar código
+   ```bash
+   playwright install
+   ```
 
 ---
 
-## 🔧 Instalación y uso
+## Uso
 
-### 1️⃣ Clonar el repositorio
+1. Configurar las búsquedas en `main.py`:
+
+```python
+consultas = [
+    "constructoras Córdoba capital Argentina",
+    "inmobiliarias Córdoba capital Argentina",
+    "arquitectos Córdoba capital Argentina"
+]
+```
+
+2. Ejecutar el script:
 
 ```bash
-git clone https://github.com/tuusuario/data-enrichment-construccion.git
-cd data-enrichment-construccion
-2️⃣ Instalar dependencias
-bash
-Copiar código
-pip install -r requirements.txt
-3️⃣ Configurar API Key de Google
-Crear una API Key en Google Cloud Console.
+python main.py
+```
 
-Activar el servicio Places API.
+3. El scraper abrirá el navegador, realizará scroll automático, y **mostrará en tiempo real los negocios encontrados**:
 
-Reemplazar TU_API_KEY_AQUI en buscar_contactos_maps.py.
+* Nombre del negocio
+* Categoría (tipo de negocio)
+* Dirección
+* Teléfono
+* Sitio web
+* Calificación / Rating
+* Descripción breve
+* Link directo a Google Maps
 
-4️⃣ Ejecutar el script principal
-bash
-Copiar código
-python buscar_contactos_maps.py
-5️⃣ Revisar el resultado
-Se generará un archivo:
+4. Al finalizar, los resultados se guardan automáticamente en `resultados_maps.xlsx`.
 
-Copiar código
-contactos_cba.xlsx
-con las columnas:
+---
 
-Categoría	Nombre	Dirección	Teléfono	Website	Email	Place_ID
+## Estructura de Datos
 
-🌐 Enriquecimiento adicional (opcional)
-Podés ampliar los datos con herramientas de data enrichment B2B como:
+| Columna          | Descripción                                   |
+| ---------------- | --------------------------------------------- |
+| Nombre           | Nombre del negocio                            |
+| Categoría        | Tipo de negocio (Inmobiliaria, Constructora…) |
+| Dirección        | Dirección física del negocio                  |
+| Teléfono         | Número de contacto                            |
+| Sitio web        | Página web del negocio                        |
+| Rating           | Calificación en Google Maps                   |
+| Descripción      | Mini reseña o descripción breve del negocio   |
+| Link Google Maps | Link directo al perfil del negocio en Maps    |
 
-Servicio	Qué hace	Plan gratuito
-Hunter.io	Encuentra emails asociados a dominios	25 búsquedas/mes
-Apollo.io	Emails y datos de decisión de empresas	plan free limitado
-Lusha	Enriquecimiento de contactos B2B	5 créditos gratis
-Snov.io	Búsqueda y verificación de emails	50 créditos free
+---
 
-Solo necesitás subir el Excel generado y configurar la búsqueda de correos a partir del campo Website.
+## Valor para Consultoría y Análisis de Mercado
 
-🔒 Cumplimiento y ética
-⚠️ Este proyecto no realiza scraping directo sobre Google Maps ni vulnera políticas.
-Toda la información proviene de:
+* **Mapeo de Competencia:** Identificación de competidores por zona y categoría.
+* **Inteligencia Comercial:** Obtención de datos de contacto y reputación online.
+* **Soporte a Estrategia:** Generación de reportes listos para dashboards y presentaciones.
+* **Automatización y Escalabilidad:** Permite recolectar grandes volúmenes de datos de forma eficiente.
 
-La API oficial de Google Places.
+---
 
-Sitios web públicos y accesibles de las empresas.
+## Buenas Prácticas
 
-El uso de estos datos debe respetar las leyes de protección de datos y comunicación comercial (Ley 25.326 / LSSI / GDPR).
-Solo se recomienda utilizar esta información para fines profesionales, institucionales o de análisis.
+* El scraping está diseñado para **uso ético y académico**, cumpliendo con las políticas de Google Maps.
+* Evitar consultas masivas que puedan generar bloqueos.
+* Los selectores pueden actualizarse periódicamente según cambios en la interfaz de Maps.
 
-🌱 Próximas mejoras
-Integración con Hunter.io API para enriquecer emails faltantes.
-
-Dashboards de métricas (porcentaje con contacto completo).
-
-Pipeline automatizado en n8n o Airflow.
-
-Carga directa a CRM (HubSpot, Airtable o Notion).
-
-👩‍💻 Autora
-Rocío Romera
-📊 Data Science & Automation Projects
-💻 GitHub • 🌐 LinkedIn
-
+---
